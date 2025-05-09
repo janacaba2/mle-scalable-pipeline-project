@@ -77,15 +77,17 @@ def obtain_slice_scores(data, y, pred, colname, catname):
 
 with open(config.SCORE_OUTPUT_FILE, "w") as f:
     # Overall test performance
-    f.write(f"*******************Overall Test Performance***********************")
+    f.write(f"*******************Overall Test Performance***********************\n")
     pred = inference(model, X_test)
     precision, recall, fbeta = compute_model_metrics(y_test, pred)
-    f.write(f"Precision{precision}, Recall: {recall}, FBeta: {fbeta}\n")
+    f.write(f"Precision: {precision}, Recall: {recall}, FBeta: {fbeta}\n\n")
 
     # Sliced model performance
     for col in cat_features:
-        f.write(f"*******************{col} Slicing***********************")
+        f.write(f"*******************{col} Slicing***********************\n")
         for cat_name in test[col].unique():
             precision, recall, fbeta = obtain_slice_scores(test, y_test, pred, col, cat_name)
-            f.write(f"{cat_name} Scores:\n")
-            f.write(f"Precision{precision}, Recall: {recall}, FBeta: {fbeta}\n")
+            f.write(f"** {cat_name} Scores:\n")
+            f.write(f"Precision: {precision}, Recall: {recall}, FBeta: {fbeta}\n")
+        
+        f.write('\n')
