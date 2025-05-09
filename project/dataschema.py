@@ -51,9 +51,10 @@ class ModelData(BaseModel):
     native_country: Annotated[str, Field(examples=['Germany'], alias='native-country')]
 
 
-    class Config:
-        allow_population_by_field_name = True  # Allows access by attribute name
-        populate_by_name = True                # Allows creating from field name or alias
+    model_config = {
+        "validate_by_name": True,
+        "populate_by_name": True
+    }
 
     @computed_field(alias="education-num", return_type=int)
     @property
