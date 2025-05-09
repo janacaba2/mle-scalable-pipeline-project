@@ -1,43 +1,91 @@
 # Script to train machine learning model.
-
+# Add the necessary imports for the starter code.
 from sklearn.model_selection import train_test_split
 import pandas as pd
-from .ml.data import process_data
-from .ml.model import train_model
-import joblib
+from ml.data import process_data
+from ml.model import train_model, inference, compute_model_metrics, save_model
+import numpy as np
+import config
+from pathlib import Path
 
-# Add the necessary imports for the starter code.
 
-# Add code to load in the data.
-
-data = pd.read_csv('data/clean_census.csv')
+# Load in the data.
+current_dir = Path(__file__).parent
+data_dir = current_dir.parent / config.DATA_FOLDER / config.DATA_FILE
+data = pd.read_csv(data_dir)
 
 # Optional enhancement, use K-fold cross validation instead of a train-test split.
 train, test = train_test_split(data, test_size=0.20)
 
-cat_features = [
-    "workclass",
-    "education",
-    "marital-status",
-    "occupation",
-    "relationship",
-    "race",
-    "sex",
-    "native-country",
-]
+label_col = config.OUTPUT_COL
+
+cat_features = config.CAT_FEATURES
+
 X_train, y_train, encoder, lb = process_data(
-    train, categorical_features=cat_features, label="salary", training=True
+    train, categorical_features=cat_features, label=label_col, training=True
 )
 
-# Proces the test data with the process_data function.
+print(f"Training Data Shape: {X_train.shape}")
+
+# Process the test data with the process_data function.
 
 X_test, y_test, encoder, lb = process_data(
-    test, categorical_features=cat_features, label="salary", training=False,
+    test, categorical_features=cat_features, label=label_col, training=False,
     encoder=encoder, lb=lb
 )
 
-# Train and save a model.
+print(f"Test Data Shape: {X_test.shape}")
 
+# Save one-hot-encoder and label binarizer
+lbfile = current_dir.parent / config.MODEL_FOLDER / config.FILENAME_LB
+save_model(lb, lbfile)
+ohefile = current_dir.parent / config.MODEL_FOLDER / config.FILENAME_OHE
+save_model(encoder, ohefile)
+
+# Train and save a model.
 model = train_model(X_train, y_train)
-modelfile = "model/rf_classifier.pkl"
-joblib.dump(model, modelfile)
+modelfile = current_dir.parent / config.MODEL_FOLDER / config.FILENAME_MLMODEL
+save_model(model, modelfile)
+
+# Print Model Performance Scores to File
+
+def obtain_slice_scores(data, y, pred, colname, catname):
+    """Use original data to identify indices of a data slice 
+    and use compute metrics on slices of the data
+    
+    Inputs
+    ------
+    data : pd.DataFrame
+        Original data before preprocessing.
+    y : np.array
+        Preprocessed output data.
+    pred : np.array
+        Predicted outputs from model.
+    colname : str
+        Column name to slice the data on.
+    catname : str
+        Unique category name within the column.
+
+    Returns
+    -------
+    compute_model_metrics : list
+        Returns the output of compute_model_metrics (list with 3 scores).
+
+    """
+    indices = np.where(data[colname]==catname)
+    return compute_model_metrics(y[indices], pred[indices])
+
+with open(config.SCORE_OUTPUT_FILE, "w") as f:
+    # Overall test performance
+    f.write(f"*******************Overall Test Performance***********************")
+    pred = inference(model, X_test)
+    precision, recall, fbeta = compute_model_metrics(y_test, pred)
+    f.write(f"Precision{precision}, Recall: {recall}, FBeta: {fbeta}\n")
+
+    # Sliced model performance
+    for col in cat_features:
+        f.write(f"*******************{col} Slicing***********************")
+        for cat_name in test[col].unique():
+            precision, recall, fbeta = obtain_slice_scores(test, y_test, pred, col, cat_name)
+            f.write(f"{cat_name} Scores:\n")
+            f.write(f"Precision{precision}, Recall: {recall}, FBeta: {fbeta}\n")

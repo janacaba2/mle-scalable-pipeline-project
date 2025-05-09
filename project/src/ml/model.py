@@ -1,5 +1,6 @@
 from sklearn.metrics import fbeta_score, precision_score, recall_score
 from sklearn.ensemble import RandomForestClassifier
+import joblib
 
 # Optional: implement hyperparameter tuning.
 def train_model(X_train, y_train):
@@ -64,3 +65,34 @@ def inference(model, X):
     pred = model.predict(X)
 
     return pred
+
+
+def save_model(model, filename):
+    """ Save model to filename using joblib library.
+
+    Inputs
+    ------
+    model : ???
+        Trained machine learning model or other component (e.g., encoders).
+    filename : str
+        Filename to save the model to.
+    """
+    joblib.dump(model, filename)
+    print(f"Saved {model.__class__.__name__} to {filename}")
+
+def load_model(filename):
+    """ Load model from filename using joblib library.
+
+    Inputs
+    ------
+    filename : str
+        Filename to load the model or other component from.
+    Returns
+    -------
+    model : ???
+        Trained machine learning model or other component (e.g., encoders).
+    """
+    model = joblib.load(filename)
+    print(f"Loaded {model.__class__.__name__} from {filename}")
+
+    return model
