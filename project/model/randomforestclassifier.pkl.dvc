@@ -1,0 +1,5 @@
+outs:
+- md5: f2e987c1bc45c487aa6060abb705ee5f
+  size: 73644825
+  hash: md5
+  path: randomforestclassifier.pkl
