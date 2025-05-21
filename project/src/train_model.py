@@ -1,5 +1,4 @@
 # Script to train machine learning model.
-# Add the necessary imports for the starter code.
 from sklearn.model_selection import train_test_split
 import pandas as pd
 from pathlib import Path
@@ -13,35 +12,26 @@ import config
 current_dir = Path(__file__).parent
 data_dir = current_dir.parent / config.DATA_FOLDER / config.DATA_FILE
 data = pd.read_csv(data_dir)
-
 # Data train-test split.
 train, test = train_test_split(data, test_size=0.20)
-
 label_col = config.OUTPUT_COL
-
 cat_features = config.CAT_FEATURES
-
+# Process the train data with the process_data function.
 X_train, y_train, encoder, lb = process_data(
     train, categorical_features=cat_features, label=label_col, training=True
 )
-
 print(f"Training Data Shape: {X_train.shape}")
-
 # Process the test data with the process_data function.
-
 X_test, y_test, encoder, lb = process_data(
     test, categorical_features=cat_features, label=label_col, training=False,
     encoder=encoder, lb=lb
 )
-
 print(f"Test Data Shape: {X_test.shape}")
-
 # Save one-hot-encoder and label binarizer
 lbfile = current_dir.parent / config.MODEL_FOLDER / config.FILENAME_LB
 save_model(lb, lbfile)
 ohefile = current_dir.parent / config.MODEL_FOLDER / config.FILENAME_OHE
 save_model(encoder, ohefile)
-
 # Train and save a model.
 model = train_model(X_train, y_train)
 modelfile = current_dir.parent / config.MODEL_FOLDER / config.FILENAME_MLMODEL
