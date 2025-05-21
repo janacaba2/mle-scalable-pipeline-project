@@ -13,13 +13,13 @@ current_dir = Path(__file__).parent
 data_dir = current_dir.parent / config.DATA_FOLDER / config.DATA_FILE
 data = pd.read_csv(data_dir)
 # Data train-test split.
-train, test = train_test_split(data, test_size=0.20)
+train, test = train_test_split(data, test_size=0.20) # noqa: F821
 label_col = config.OUTPUT_COL
 cat_features = config.CAT_FEATURES
 # Process the train data with the process_data function.
 X_train, y_train, encoder, lb = process_data(
     train, categorical_features=cat_features, label=label_col, training=True
-)
+) # noqa: F821
 print(f"Training Data Shape: {X_train.shape}")
 # Process the test data with the process_data function.
 X_test, y_test, encoder, lb = process_data(
