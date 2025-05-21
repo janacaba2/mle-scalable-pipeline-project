@@ -1,0 +1,7 @@
+[core]
+    remote = localremote
+['remote "localremote"']
+    url = ../../local_remote_dir
+['remote "driveremote"']
+    url = gdrive://1-GfVjf3ym28U384mPYgBKI01ZWzprOmr
+    gdrive_use_service_account = true
