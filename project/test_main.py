@@ -6,11 +6,13 @@ from main import app
 # Instantiate the testing client with our app.
 client = TestClient(app)
 
+
 # Write tests using the same syntax as with the requests module.
 def test_get_root():
     r = client.get("/")
     assert r.status_code == 200
-    assert r.json() == {"greeting": "Welcome to the World of Machine Learning!"}
+    assert r.json() == {"greeting":
+                        "Welcome to the World of Machine Learning!"}
 
 
 def test_infer_negative_prediction():
@@ -32,6 +34,7 @@ def test_infer_negative_prediction():
     r = client.post("/inference", json=data_json)
     assert r.status_code == 200
     assert r.json() == {"0": "<=50K"}
+
 
 def test_infer_positive_prediction():
     data_json = {
@@ -59,6 +62,7 @@ def test_infer_malformed():
     print(r.status_code)
     assert r.status_code == 422
 
+
 def test_infer_outrange_category():
     data_json = {
         "age": 50,
@@ -77,6 +81,7 @@ def test_infer_outrange_category():
     }
     r = client.post("/inference", json=data_json)
     assert r.status_code == 422
+
 
 def test_infer_outrange_numeric():
     data_json = {
