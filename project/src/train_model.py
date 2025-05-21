@@ -2,11 +2,11 @@
 # Add the necessary imports for the starter code.
 from sklearn.model_selection import train_test_split
 import pandas as pd
+from pathlib import Path
+import numpy as np
 from ml.data import process_data
 from ml.model import train_model, inference, compute_model_metrics, save_model
-import numpy as np
 import config
-from pathlib import Path
 
 
 # Load in the data.
@@ -14,7 +14,7 @@ current_dir = Path(__file__).parent
 data_dir = current_dir.parent / config.DATA_FOLDER / config.DATA_FILE
 data = pd.read_csv(data_dir)
 
-# Optional enhancement, use K-fold cross validation instead of a train-test split.
+# Data train-test split.
 train, test = train_test_split(data, test_size=0.20)
 
 label_col = config.OUTPUT_COL
@@ -47,12 +47,12 @@ model = train_model(X_train, y_train)
 modelfile = current_dir.parent / config.MODEL_FOLDER / config.FILENAME_MLMODEL
 save_model(model, modelfile)
 
-# Print Model Performance Scores to File
 
+# Print Model Performance Scores to File
 def obtain_slice_scores(data, y, pred, colname, catname):
-    """Use original data to identify indices of a data slice 
+    """Use original data to identify indices of a data slice
     and use compute metrics on slices of the data
-    
+
     Inputs
     ------
     data : pd.DataFrame
@@ -72,12 +72,13 @@ def obtain_slice_scores(data, y, pred, colname, catname):
         Returns the output of compute_model_metrics (list with 3 scores).
 
     """
-    indices = np.where(data[colname]==catname)
+    indices = np.where(data[colname] == catname)
     return compute_model_metrics(y[indices], pred[indices])
+
 
 with open(config.SCORE_OUTPUT_FILE, "w") as f:
     # Overall test performance
-    f.write(f"*******************Overall Test Performance***********************\n")
+    f.write("*******************Overall Test Performance******************\n")
     pred = inference(model, X_test)
     precision, recall, fbeta = compute_model_metrics(y_test, pred)
     f.write(f"Precision: {precision}, Recall: {recall}, FBeta: {fbeta}\n\n")
@@ -86,8 +87,9 @@ with open(config.SCORE_OUTPUT_FILE, "w") as f:
     for col in cat_features:
         f.write(f"*******************{col} Slicing***********************\n")
         for cat_name in test[col].unique():
-            precision, recall, fbeta = obtain_slice_scores(test, y_test, pred, col, cat_name)
+            precision, recall, fbeta = obtain_slice_scores(test, y_test,
+                                                           pred, col, cat_name)
             f.write(f"** {cat_name} Scores:\n")
-            f.write(f"Precision: {precision}, Recall: {recall}, FBeta: {fbeta}\n")
-        
+            f.write(f"""Precision: {precision}, Recall: {recall},
+                    FBeta: {fbeta}\n""")
         f.write('\n')
