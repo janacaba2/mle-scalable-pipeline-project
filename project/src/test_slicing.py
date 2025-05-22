@@ -1,13 +1,13 @@
 import pytest
 import pandas as pd
-import os
+from pathlib import Path
 from . import config
 
 
 @pytest.fixture
 def data():
-    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-    df = pd.read_csv(os.path.join(BASE_DIR, config.DATA_FOLDER, config.DATA_FILE))
+    BASE_DIR =  Path(__file__).resolve().parent.parent
+    df = pd.read_csv(BASE_DIR / config.DATA_FOLDER / config.DATA_FILE)
     return df
 
 
