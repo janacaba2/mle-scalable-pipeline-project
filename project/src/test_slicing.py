@@ -5,19 +5,19 @@ from . import config
 
 
 @pytest.fixture
-def data():
+def data():  # pylint: disable=redefined-outer-name
     BASE_DIR =  Path(__file__).resolve().parent.parent
     df = pd.read_csv(BASE_DIR / config.DATA_FOLDER / config.DATA_FILE)
     return df
 
 
 @pytest.fixture
-def high_salary_slice(data):
+def high_salary_slice(data):  # pylint: disable=redefined-outer-name
     return data[data['salary']=='>50K']
 
 
 @pytest.fixture
-def low_salary_slice(data):
+def low_salary_slice(data):  # pylint: disable=redefined-outer-name
     return data[data['salary']=='<=50K']
 
 

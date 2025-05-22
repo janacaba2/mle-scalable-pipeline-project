@@ -15,7 +15,7 @@ client = TestClient(app)
 
 
 @pytest.fixture
-def data():
+def data():  # pylint: disable=redefined-outer-name
     data_json = {
         "age": 25,
         "workclass": "State-gov",
@@ -35,7 +35,7 @@ def data():
 
 
 @pytest.fixture
-def data2():
+def data2():  # pylint: disable=redefined-outer-name
     data_json = {
         "age": 50,
         "workclass": "Private",
