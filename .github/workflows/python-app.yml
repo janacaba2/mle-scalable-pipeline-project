@@ -32,7 +32,7 @@ jobs:
       run: |
         echo "${{ secrets.GDRIVE_CREDENTIALS }}" > ./gdrive-creds.json
     - name: Configure DVC remote
-      run: dvc remote modify gdrive gdrive_service_account_json_file_path ./gdrive-key.json
+      run: dvc remote modify driveremote gdrive_service_account_json_file_path ./gdrive-key.json
     - name: Pull model from DVC
       run: dvc pull --remote driveremote
     - name: Lint with flake8
