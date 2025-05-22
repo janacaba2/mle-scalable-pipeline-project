@@ -33,7 +33,7 @@ jobs:
         echo "${{ secrets.GDRIVE_CREDENTIALS }}" > gdrive-creds.json
         export GDRIVE_CREDENTIALS=gdrive-creds.json
     - name: Pull model from DVC
-      run: dvc pull
+      run: dvc pull --remote driveremote
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
