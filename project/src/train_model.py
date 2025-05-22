@@ -8,9 +8,9 @@ import pandas as pd
 import numpy as np
 
 sys.path.append(str(Path(__file__).resolve().parent.parent))
-from ml.data import process_data
-from ml.model import train_model, inference, compute_model_metrics, save_model
-import config
+from .ml.data import process_data
+from .ml.model import train_model, inference, compute_model_metrics, save_model
+from . import config
 
 
 # Load in the data.

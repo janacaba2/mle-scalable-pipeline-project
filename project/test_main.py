@@ -8,21 +8,14 @@ import pytest
 import sys
 from pathlib import Path
 sys.path.append(str(Path(__file__).resolve().parent.parent))
-from main import app
+from .main import app
 
 # Instantiate the testing client with our app.
 client = TestClient(app)
 
 
-# Write tests using the same syntax as with the requests module.
-def test_get_root():
-    r = client.get("/")
-    assert r.status_code == 200
-    assert r.json() == {"greeting":
-                        "Welcome to the World of Machine Learning!"}
-
-
-def test_infer_negative_prediction():
+@pytest.fixture
+def data():
     data_json = {
         "age": 25,
         "workclass": "State-gov",
@@ -38,12 +31,11 @@ def test_infer_negative_prediction():
         "hours-per-week": 35,
         "native-country": "United-States",
     }
-    r = client.post("/inference", json=data_json)
-    assert r.status_code == 200
-    assert r.json() == {"0": "<=50K"}
+    return data_json
 
 
-def test_infer_positive_prediction():
+@pytest.fixture
+def data2():
     data_json = {
         "age": 50,
         "workclass": "Private",
@@ -59,7 +51,25 @@ def test_infer_positive_prediction():
         "hours-per-week": 50,
         "native-country": "United-States",
     }
-    r = client.post("/inference", json=data_json)
+    return data_json
+
+
+# Write tests using the same syntax as with the requests module.
+def test_get_root():
+    r = client.get("/")
+    assert r.status_code == 200
+    assert r.json() == {"greeting":
+                        "Welcome to the World of Machine Learning!"}
+
+
+def test_infer_negative_prediction(data):
+    r = client.post("/inference", json=data)
+    assert r.status_code == 200
+    assert r.json() == {"0": "<=50K"}
+
+
+def test_infer_positive_prediction(data2):
+    r = client.post("/inference", json=data2)
     assert r.status_code == 200
     assert r.json() == {"0": ">50K"}
 
@@ -70,41 +80,15 @@ def test_infer_malformed():
     assert r.status_code == 422
 
 
-def test_infer_outrange_category():
-    data_json = {
-        "age": 50,
-        "workclass": "Love",
-        "fnlgt": 203488,
-        "education": "Masters",
-        "marital-status": "Married-civ-spouse",
-        "occupation": "Exec-managerial",
-        "relationship": "Husband",
-        "race": "White",
-        "sex": "Male",
-        "capital-gain": 5000,
-        "capital-loss": 0,
-        "hours-per-week": 50,
-        "native-country": "United-States",
-    }
+def test_infer_outrange_category(data2):
+    data_json = data2
+    data_json['workclass'] = "Love"
     r = client.post("/inference", json=data_json)
     assert r.status_code == 422
 
 
-def test_infer_outrange_numeric():
-    data_json = {
-        "age": 150,
-        "workclass": "Private",
-        "fnlgt": 203488,
-        "education": "Masters",
-        "marital-status": "Married-civ-spouse",
-        "occupation": "Exec-managerial",
-        "relationship": "Husband",
-        "race": "White",
-        "sex": "Male",
-        "capital-gain": 5000,
-        "capital-loss": 0,
-        "hours-per-week": 50,
-        "native-country": "United-States",
-    }
+def test_infer_outrange_numeric(data2):
+    data_json = data2
+    data_json['age'] = 150
     r = client.post("/inference", json=data_json)
     assert r.status_code == 422
