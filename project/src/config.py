@@ -23,7 +23,3 @@ CAT_FEATURES = [
     "sex",
     "native-country",
 ]
-
-
-
-
