@@ -1,6 +1,6 @@
 import pytest
-import pandas as pd
 from pathlib import Path
+import pandas as pd
 from sklearn.model_selection import train_test_split
 from .ml.data import process_data
 from . import config
@@ -16,16 +16,7 @@ def data():
 
 @pytest.fixture
 def cat_features():
-    return [
-        "workclass",
-        "education",
-        "marital-status",
-        "occupation",
-        "relationship",
-        "race",
-        "sex",
-        "native-country",
-        ]
+    return config.CAT_FEATURES
 
 
 @pytest.fixture
