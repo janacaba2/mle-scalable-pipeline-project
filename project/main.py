@@ -4,6 +4,7 @@
 from fastapi import FastAPI
 import joblib
 import pandas as pd
+import os
 
 # Import my python scripts
 from src import config
@@ -16,9 +17,10 @@ from dataschema import ModelData
 app = FastAPI()
 
 # Load the trained model
-model = joblib.load(config.MODEL_FOLDER+config.FILENAME_MLMODEL)
-lb = joblib.load(config.MODEL_FOLDER+config.FILENAME_LB)
-encoder = joblib.load(config.MODEL_FOLDER+config.FILENAME_OHE)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+model = joblib.load(os.path.join(BASE_DIR, config.MODEL_FOLDER, config.FILENAME_MLMODEL))
+lb = joblib.load(os.path.join(BASE_DIR, config.MODEL_FOLDER, config.FILENAME_LB))
+encoder = joblib.load(os.path.join(BASE_DIR, config.MODEL_FOLDER, config.FILENAME_OHE))
 
 # Load Data Info
 cat_features = config.CAT_FEATURES

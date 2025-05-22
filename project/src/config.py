@@ -1,5 +1,5 @@
-MODEL_FOLDER = "./model/"
-DATA_FOLDER = "./data/"
+MODEL_FOLDER = "model"
+DATA_FOLDER = "data"
 DATA_FILE = "clean_census.csv"
 FILENAME_OHE = "onehotencoder.pkl"
 FILENAME_LB = "labelbinarizer.pkl"
