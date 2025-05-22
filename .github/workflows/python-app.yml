@@ -30,7 +30,7 @@ jobs:
         pip install -r project/requirements.txt
     - name: Set up Google Drive credentials
       run: |
-        echo "${{ secrets.GDRIVE_CREDENTIALS }}" > ./gdrive-key.json
+        echo '${{ secrets.GDRIVE_CREDENTIALS }}' > ./gdrive-key.json
     - name: Configure DVC remote
       run: dvc remote modify driveremote gdrive_service_account_json_file_path ./gdrive-key.json
     - name: Pull model from DVC
