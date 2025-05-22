@@ -11,11 +11,11 @@ from pathlib import Path
 sys.path.append(str(Path(__file__).resolve().parent.parent))
 
 # Import my python scripts
-from src import config
-from src.ml.data import process_data
-from src.ml.model import inference
+from .src import config
+from .src.ml.data import process_data
+from .src.ml.model import inference
 # import pydantic input data schema
-from dataschema import ModelData
+from .dataschema import ModelData
 
 # Instantiate the app.
 app = FastAPI()

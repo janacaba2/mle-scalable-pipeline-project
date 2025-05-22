@@ -9,7 +9,7 @@ from . import config
 
 
 @pytest.fixture
-def data():
+def data():  # pylint: disable=redefined-outer-name
     BASE_DIR =  Path(__file__).resolve().parent.parent
     data = pd.read_csv(BASE_DIR / config.DATA_FOLDER / config.DATA_FILE)
     train, test = train_test_split(data, test_size=0.20, random_state=42)
@@ -17,12 +17,12 @@ def data():
 
 
 @pytest.fixture
-def cat_features():
+def cat_features():  # pylint: disable=redefined-outer-name
     return config.CAT_FEATURES
 
 
 @pytest.fixture
-def processed_train_data(data, cat_features):
+def processed_train_data(data, cat_features):  # pylint: disable=redefined-outer-name
 
     train, _ = data
 
@@ -32,7 +32,7 @@ def processed_train_data(data, cat_features):
 
 
 @pytest.fixture
-def processed_test_data(data, cat_features, processed_train_data):
+def processed_test_data(data, cat_features, processed_train_data):  # pylint: disable=redefined-outer-name
 
     _, test = data
     _, _, encoder, lb = processed_train_data
