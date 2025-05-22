@@ -2,6 +2,7 @@ from sklearn.metrics import fbeta_score, precision_score, recall_score
 from sklearn.ensemble import RandomForestClassifier
 import joblib
 
+
 # Optional: implement hyperparameter tuning.
 def train_model(X_train, y_train):
     """
@@ -79,6 +80,7 @@ def save_model(model, filename):
     """
     joblib.dump(model, filename)
     print(f"Saved {model.__class__.__name__} to {filename}")
+
 
 def load_model(filename):
     """ Load model from filename using joblib library.
