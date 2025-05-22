@@ -10,6 +10,7 @@ from . import config
 
 @pytest.fixture
 def data():  # pylint: disable=redefined-outer-name
+    """Load data"""
     BASE_DIR =  Path(__file__).resolve().parent.parent
     data = pd.read_csv(BASE_DIR / config.DATA_FOLDER / config.DATA_FILE)
     train, test = train_test_split(data, test_size=0.20, random_state=42)
@@ -18,12 +19,13 @@ def data():  # pylint: disable=redefined-outer-name
 
 @pytest.fixture
 def cat_features():  # pylint: disable=redefined-outer-name
+    """Obtain categorical feature columns"""
     return config.CAT_FEATURES
 
 
 @pytest.fixture
 def processed_train_data(data, cat_features):  # pylint: disable=redefined-outer-name
-
+    """Obtain train data as fixture"""
     train, _ = data
 
     return process_data(
@@ -33,7 +35,7 @@ def processed_train_data(data, cat_features):  # pylint: disable=redefined-outer
 
 @pytest.fixture
 def processed_test_data(data, cat_features, processed_train_data):  # pylint: disable=redefined-outer-name
-
+    """Obtain test data as fixture"""
     _, test = data
     _, _, encoder, lb = processed_train_data
 
@@ -45,7 +47,7 @@ def processed_test_data(data, cat_features, processed_train_data):  # pylint: di
 
 
 def test_process_data(processed_train_data, processed_test_data):
-
+    """Test preprocessing data"""
     X_train, _, encoder, lb = processed_train_data
 
     X_test, _, encoder2, lb2 = processed_test_data
@@ -59,19 +61,22 @@ def test_process_data(processed_train_data, processed_test_data):
 
 
 @pytest.fixture
-def model(processed_train_data):
+def model(processed_train_data):  # pylint: disable=redefined-outer-name
+    """Train a ML model"""
     from .ml.model import train_model
     X_train, y_train, _, _ = processed_train_data
 
-    model = train_model(X_train, y_train)
-    return model
+    tmp_model = train_model(X_train, y_train)
+    return tmp_model
 
 
 def test_train_model(model):
+    """Test trained model on prediction attribute"""
     assert hasattr(model, "predict"), "Model should have a predict method"
 
 
 def test_inference(processed_test_data, model):
+    """Test inference of ML Model"""
     from .ml.model import inference
 
     X_test, y_test, _, _ = processed_test_data
