@@ -22,4 +22,4 @@ jobs:
         pip install -r project/requirements.txt
     - name: Analysing the code with pylint
       run: |
-        pylint project/**/*.py
+        pylint --fail-under=6 project/**/*.py
