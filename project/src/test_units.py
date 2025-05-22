@@ -1,9 +1,11 @@
 import pytest
 from pathlib import Path
+import sys
 import pandas as pd
 from sklearn.model_selection import train_test_split
-from .ml.data import process_data
-from . import config
+sys.path.append(str(Path(__file__).resolve().parent.parent))
+from ml.data import process_data
+import config
 
 
 @pytest.fixture
@@ -22,7 +24,7 @@ def cat_features():
 @pytest.fixture
 def processed_train_data(data, cat_features):
 
-    train, test = data
+    train, _ = data
 
     return process_data(
         train, categorical_features=cat_features, label="salary", training=True
@@ -32,8 +34,8 @@ def processed_train_data(data, cat_features):
 @pytest.fixture
 def processed_test_data(data, cat_features, processed_train_data):
 
-    train, test = data
-    X_train, y_train, encoder, lb = processed_train_data
+    _, test = data
+    _, _, encoder, lb = processed_train_data
 
     return process_data(
         test, categorical_features=cat_features,
@@ -44,9 +46,9 @@ def processed_test_data(data, cat_features, processed_train_data):
 
 def test_process_data(processed_train_data, processed_test_data):
 
-    X_train, y_train, encoder, lb = processed_train_data
+    X_train, _, encoder, lb = processed_train_data
 
-    X_test, y_test, encoder2, lb2 = processed_test_data
+    X_test, _, encoder2, lb2 = processed_test_data
 
     # check train vs test data shape
     assert X_train.shape[0] > X_test.shape[0], "Training data shape is not larger then validation data"
@@ -59,7 +61,7 @@ def test_process_data(processed_train_data, processed_test_data):
 @pytest.fixture
 def model(processed_train_data):
     from .ml.model import train_model
-    X_train, y_train, encoder, lb = processed_train_data
+    X_train, y_train, _, _ = processed_train_data
 
     model = train_model(X_train, y_train)
     return model
@@ -72,7 +74,7 @@ def test_train_model(model):
 def test_inference(processed_test_data, model):
     from .ml.model import inference
 
-    X_test, y_test, encoder2, lb2 = processed_test_data
+    X_test, y_test, _, _ = processed_test_data
     pred = inference(model, X_test)
 
     assert pred.shape[0] == X_test.shape[0], "Prediction and test input should have the same shape"

@@ -1,11 +1,16 @@
-# Script to train machine learning model.
+"""
+Script to train machine learning model.
+"""
+import sys
 from pathlib import Path
 from sklearn.model_selection import train_test_split
 import pandas as pd
 import numpy as np
-from .ml.data import process_data
-from .ml.model import train_model, inference, compute_model_metrics, save_model
-from . import config
+
+sys.path.append(str(Path(__file__).resolve().parent.parent))
+from ml.data import process_data
+from ml.model import train_model, inference, compute_model_metrics, save_model
+import config
 
 
 # Load in the data.

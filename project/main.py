@@ -1,10 +1,14 @@
 """
 ###Code for FastAPI###
 """
+import os
 from fastapi import FastAPI
 import joblib
 import pandas as pd
-import os
+
+import sys
+from pathlib import Path
+sys.path.append(str(Path(__file__).resolve().parent.parent))
 
 # Import my python scripts
 from src import config

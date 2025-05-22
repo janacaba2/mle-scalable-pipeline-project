@@ -1,3 +1,7 @@
+"""
+Definition of all the repeatedly used config information
+"""
+
 MODEL_FOLDER = "model"
 DATA_FOLDER = "data"
 DATA_FILE = "clean_census.csv"

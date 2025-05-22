@@ -1,3 +1,7 @@
+"""
+Define input data scheme for app POST.
+Use pydantic to control input data correctness.
+"""
 from pydantic import BaseModel, Field, computed_field
 from typing import Literal, Annotated
 import pandas as pd

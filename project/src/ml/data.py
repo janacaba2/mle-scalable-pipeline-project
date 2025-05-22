@@ -1,3 +1,7 @@
+"""
+Preprocessing data.
+"""
+
 import numpy as np
 from sklearn.preprocessing import LabelBinarizer, OneHotEncoder
 

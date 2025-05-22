@@ -1,6 +1,13 @@
+"""
+Test cases for app in main.py
+"""
 from fastapi.testclient import TestClient
+import pytest
 
 # Import our app from main.py.
+import sys
+from pathlib import Path
+sys.path.append(str(Path(__file__).resolve().parent.parent))
 from main import app
 
 # Instantiate the testing client with our app.
