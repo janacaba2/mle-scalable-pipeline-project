@@ -1,11 +1,13 @@
 import pytest
 import pandas as pd
+import os
+from . import config
 
 
 @pytest.fixture
 def data():
-
-    df = pd.read_csv('data/clean_census.csv')
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    df = pd.read_csv(os.path.join(BASE_DIR, config.DATA_FOLDER, config.DATA_FILE))
     return df
 
 

@@ -1,12 +1,15 @@
 import pytest
 import pandas as pd
+import os
 from sklearn.model_selection import train_test_split
 from .ml.data import process_data
+from . import config
 
 
 @pytest.fixture
 def data():
-    data = pd.read_csv('data/clean_census.csv')
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    data = pd.read_csv(os.path.join(BASE_DIR, config.DATA_FOLDER, config.DATA_FILE))
     train, test = train_test_split(data, test_size=0.20, random_state=42)
     return [train, test]
 
